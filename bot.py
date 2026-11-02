@@ -78,6 +78,11 @@ class StatsBot(commands.Bot):
         intents.messages = True
         intents.message_content = True  # privileged: needed for on_message counting
         intents.voice_states = True  # needed for voice-time tracking
+        # presences intentionally OFF: Online count uses the guild preview count
+        # (approximate_presence_count), which works without Presence Intent.
+        # Enabling presences here broke startup on 2026-11-01 with
+        # PrivilegedIntentsRequired because Presence Intent is off in the
+        # Developer Portal. Re-enable it only together with that Portal toggle.
         # command_prefix=None: slash commands ONLY. No prefix commands
         # can be registered or triggered in this bot.
         super().__init__(command_prefix=None, intents=intents, help_command=None,

@@ -12,6 +12,8 @@ from datetime import datetime, timezone, timedelta
 
 import discord
 
+import ui
+
 WIB = timezone(timedelta(hours=7))
 TIME_FORMAT = "YYYY-MM-DD HH:MM"
 TIME_EXAMPLE = "2026-11-05 19:00"
@@ -98,7 +100,9 @@ async def guild_only(interaction: discord.Interaction) -> discord.Member | None:
     """Reply ephemerally and return None if used outside a guild."""
     if interaction.guild is None or not isinstance(interaction.user, discord.Member):
         await interaction.response.send_message(
-            "This command can only be used inside a server.", ephemeral=True)
+            embed=ui.err("🚫 Server only",
+                         "This command can only be used inside a server."),
+            ephemeral=True)
         return None
     return interaction.user
 
@@ -110,7 +114,9 @@ async def staff_only(interaction: discord.Interaction) -> discord.Member | None:
         return None
     if not is_staff(member):
         await interaction.response.send_message(
-            "Staff only: this command requires Administrator or "
-            "Manage Guild permission.", ephemeral=True)
+            embed=ui.err("🚫 Staff only",
+                         "This command requires Administrator or "
+                         "Manage Guild permission."),
+            ephemeral=True)
         return None
     return member
